@@ -9,11 +9,31 @@ printusage()
     echo "    -c : Build the xcat-inventory deb package"
 }
 # For the purpose of getting the distribution name
-if [[ ! -f /etc/lsb-release ]]; then
-    echo "ERROR: Could not find /etc/lsb-release, is this script executed on a Ubuntu machine?"
+if [[ -f /etc/os-release ]]; then
+    . /etc/os-release
+    DISTRO_ID=${ID}
+    DISTRO_VERSION=${VERSION_ID}
+elif [[ -f /etc/lsb-release ]]; then
+    . /etc/lsb-release
+    DISTRO_ID=$(echo "${DISTRIB_ID}" | tr '[:upper:]' '[:lower:]')
+    DISTRO_VERSION=${DISTRIB_RELEASE}
+else
+    echo "ERROR: Could not detect distro, is this script executed on a Ubuntu/Debian machine?"
     exit 1
 fi
-. /etc/lsb-release
+
+if [[ "${DISTRO_ID}" != "ubuntu" && "${DISTRO_ID}" != "debian" ]]; then
+    echo "ERROR: Unsupported distro ${DISTRO_ID}, this script supports Ubuntu and Debian"
+    exit 1
+fi
+
+if [[ "${DISTRO_ID}" == "debian" ]]; then
+    DEBIAN_MAJOR_VERSION=${DISTRO_VERSION%%.*}
+    if [[ ! "${DEBIAN_MAJOR_VERSION}" =~ ^[0-9]+$ ]] || [[ "${DEBIAN_MAJOR_VERSION}" -lt 12 ]]; then
+        echo "ERROR: Unsupported Debian version ${DISTRO_VERSION}, Debian 12+ is required"
+        exit 1
+    fi
+fi
 # Check the necessary packages before starting the build
 declare -a packages=( "reprepro" "devscripts" "debhelper" "quilt" )
 
@@ -25,8 +45,6 @@ for package in ${packages[@]}; do
     fi
 done
 
-# Supported distributions
-dists="saucy trusty utopic xenial"
 c_flag=$1
 
 if [ -z "$c_flag" ];then
