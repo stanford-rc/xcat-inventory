@@ -26,18 +26,6 @@ if [[ "${DISTRO_ID}" != "ubuntu" && "${DISTRO_ID}" != "debian" ]]; then
     echo "ERROR: Unsupported distro ${DISTRO_ID}, this script supports Ubuntu and Debian"
     exit 1
 fi
-
-if [[ "${DISTRO_ID}" == "debian" ]]; then
-    DEBIAN_MAJOR_VERSION=${DISTRO_VERSION%%.*}
-    if [[ ! "${DEBIAN_MAJOR_VERSION}" =~ ^[0-9]+$ ]]; then
-        echo "ERROR: Unsupported Debian version ${DISTRO_VERSION}, Debian 12+ is required"
-        exit 1
-    fi
-    if [[ "${DEBIAN_MAJOR_VERSION}" -lt 12 ]]; then
-        echo "ERROR: Unsupported Debian version ${DISTRO_VERSION}, Debian 12+ is required"
-        exit 1
-    fi
-fi
 # Check the necessary packages before starting the build
 declare -a packages=( "reprepro" "devscripts" "debhelper" "quilt" )
 
