@@ -8,5 +8,5 @@ Homepage: https://xcat.org/
 
 Package: xcat-inventory
 Architecture: all
-Depends: python-pymysql,python-sqlalchemy,python-psycopg2,python-six,python-yaml,python-jinja2,git
+Depends: python3-pymysql,python3-sqlalchemy,python3-psycopg2,python3-six,python3-yaml,python3-jinja2,git
 Description: xcat inventory
