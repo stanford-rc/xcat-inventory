@@ -42,7 +42,7 @@ if [ $? != 0 ]; then
     exit 1
 fi
 
-buildpath=`find $dftpath -name ${pkgname}*.$pkgtype | xargs ls -t | head -n 1`
+buildpath=$(find "$dftpath" -name "${pkgname}*.${pkgtype}" | xargs -r ls -t | head -n 1)
 if [ -z "$buildpath" ]; then
     echo "[ERROR] Could not find build ${pkgname}*.$pkgtype"
     exit 1
