@@ -89,6 +89,15 @@ then
         VERINFO="${VERSION} (git commit $commit_id_long)"
         echo "VERINFO $VERINFO"
         packages="xcat-inventory"
+        # Rewrite python2 shebangs to python3 for the deb build only.
+        # The source keeps python2 shebangs so the rpm path (EL7) is unaffected;
+        # restored below after dpkg-buildpackage runs. Done before the VERINFO
+        # sed so the backup captures the unmodified shell.py.
+        SHEBANG_BACKUP=$(mktemp -d)
+        ( cd $curdir && tar -cf $SHEBANG_BACKUP/orig.tar $(grep -rl '^#!/usr/bin/python2' xcat-inventory) )
+        ( cd $curdir && grep -rl '^#!/usr/bin/python2' xcat-inventory \
+            | xargs sed -i '1s|^#!/usr/bin/python2$|#!/usr/bin/python3|' )
+
         cp -f $curdir/xcat-inventory/xcclient/inventory/shell.py /tmp/
         sed -i s/\#VERSION_SUBSTITUTE\#/"$VERINFO"/g $curdir/xcat-inventory/xcclient/inventory/shell.py
         target_archs=(all)
@@ -124,6 +133,10 @@ then
         if [ -f /tmp/shell.py ]; then
             cp -f /tmp/shell.py $curdir/xcat-inventory/xcclient/inventory/shell.py
             rm -f /tmp/shell.py
+        fi
+        if [ -n "$SHEBANG_BACKUP" ] && [ -f "$SHEBANG_BACKUP/orig.tar" ]; then
+            ( cd $curdir && tar -xf $SHEBANG_BACKUP/orig.tar )
+            rm -rf "$SHEBANG_BACKUP"
         fi
     fi
 
