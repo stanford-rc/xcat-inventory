@@ -10,8 +10,8 @@ function check_linux_distro()
 
 pkgname="xcat-inventory"
 
-build_dir=${DEST:-/${pkgname}_build}
-mkdir -p $build_dir
+build_dir=${DEST:-$(pwd)/${pkgname}_build}
+mkdir -p "$build_dir"
 
 XCAT_BUILD_DISTRO="$(check_linux_distro)"
 echo "[INFO] Start to build $pkgname on $XCAT_BUILD_DISTRO"
@@ -50,7 +50,7 @@ fi
 
 filepath=$(dirname $buildpath)
 build_dir=$build_dir
-mkdir -p $build_dir
+mkdir -p "$build_dir"
 
 cp -f $buildpath $build_dir
 if [ $? != 0 ]; then
