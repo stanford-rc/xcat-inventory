@@ -25,8 +25,8 @@ case "${XCAT_BUILD_DISTRO}" in
     dftpath="/root/rpmbuild/RPMS/noarch"
     pkgtype="rpm"
     ;;
-"ubuntu")
-    buildcmd="./build-ubuntu -c" 
+"ubuntu"|"debian")
+    buildcmd="./build-deb -c"
     dftpath=$cur_path
     pkgtype="deb"
     ;;
