@@ -73,7 +73,7 @@ def Util_subvarsindict(mydict,vardict):
 def Util_getdictval(mydict,keystr):
     if not  isinstance(mydict,dict):
         return None
-    dictkeyregex=re.compile("([^\.]+)\.?(\S+)*")
+    dictkeyregex=re.compile(r"([^\.]+)\.?(\S+)*")
     result=re.findall(dictkeyregex,keystr)
     if result:
         (key,remdkey)=result[0]
@@ -86,7 +86,7 @@ def Util_getdictval(mydict,keystr):
 
 # get the dict value mydict[a][b][c] with key path a.b.c
 def Util_setdictval(mydict,keystr,value):
-    dictkeyregex=re.compile("([^\.]+)\.?(\S+)*")
+    dictkeyregex=re.compile(r"([^\.]+)\.?(\S+)*")
     result=re.findall(dictkeyregex,keystr)
     if result:
         (key,remdkey)=result[0]
@@ -99,7 +99,7 @@ def Util_setdictval(mydict,keystr,value):
 
 #remove dict key [a][b][c] with key path a.b.c
 def Util_deldictkey(mydict,keystr):
-    dictkeyregex=re.compile("([^\.]+)\.?(\S+)*")
+    dictkeyregex=re.compile(r"([^\.]+)\.?(\S+)*")
     result=re.findall(dictkeyregex,keystr)
     if result:
         (key,remdkey)=result[0]

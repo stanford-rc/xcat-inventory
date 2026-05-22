@@ -43,13 +43,13 @@ class XcatBase(object):
 
     @classmethod
     def __gendepdict(cls,schmpath):
-        valregex=re.compile("^\$\{\{((.*):(.*))\}\}\s*$")
-        revregex=re.compile("^W:T\{(\S+)\}=(.+)$")
-        validateregex=re.compile("^C:(.+)$")
-        tabentregex=re.compile("T\{(.*?)\}")
-        dictvalregex=re.compile("V\{(.*?)\}")
-        filevalregex=re.compile("^F:(.+)$")
-        refregex=re.compile("^REF\{(.+)\}$")
+        valregex=re.compile(r"^\$\{\{((.*):(.*))\}\}\s*$")
+        revregex=re.compile(r"^W:T\{(\S+)\}=(.+)$")
+        validateregex=re.compile(r"^C:(.+)$")
+        tabentregex=re.compile(r"T\{(.*?)\}")
+        dictvalregex=re.compile(r"V\{(.*?)\}")
+        filevalregex=re.compile(r"^F:(.+)$")
+        refregex=re.compile(r"^REF\{(.+)\}$")
  
         def __parselambda(expression):
             mtchdval=re.findall(valregex,expression)
@@ -325,7 +325,7 @@ class XcatBase(object):
             elif type(criteria) == list:
                 criterialist=criteria
             for expression in criterialist:
-                validateregex=re.compile("^C:\$\{\{(.+)\}\}$")
+                validateregex=re.compile(r"^C:\$\{\{(.+)\}\}$")
                 mtchdval=re.findall(validateregex,expression)
                 rule=mtchdval[0]
 
