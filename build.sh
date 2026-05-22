@@ -37,7 +37,7 @@ case "${XCAT_BUILD_DISTRO}" in
 esac
 
 $buildcmd |& tee /tmp/build.log
-if [ $? != 0 ]; then
+if [ ${PIPESTATUS[0]} != 0 ]; then
     echo "[ERROR] Failed to build $pkgname by command $buildcmd"
     exit 1
 fi
