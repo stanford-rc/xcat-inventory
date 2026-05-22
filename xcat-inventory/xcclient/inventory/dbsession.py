@@ -5,6 +5,7 @@
 # -*- coding: utf-8 -*-
 #
 
+import sqlalchemy
 from sqlalchemy import create_engine,inspect
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -18,7 +19,15 @@ from .exceptions import *
 codecs.register(lambda name: codecs.lookup('utf8') if name == 'utf8mb4' else None)
 
 Base = declarative_base()
-Base.metadata.bind = None;
+
+# SQLAlchemy 0.9/1.0/1.3 require autoload=True to trigger reflection even when
+# autoload_with is set; 1.4+ make autoload=True implicit; 2.0 removed autoload.
+# This helper returns the right __table_args__ kwargs across all versions.
+_sqla_major = int(sqlalchemy.__version__.split('.')[0])
+def autoload_kwargs(engine):
+    if _sqla_major < 2:
+        return {'autoload': True, 'autoload_with': engine}
+    return {'autoload_with': engine}
 
 
 class Singleton(object):
@@ -29,7 +38,8 @@ class Singleton(object):
 
 class DBsession(Singleton):
     _dbcfgpath='/etc/xcat/cfgloc'
-    _dbcfgregex=re.compile("^(\S+):dbname=(\S+);host=(\S+)\|(\S+)\|(\S*)$")
+    _dbcfgregex=re.compile(r"^(\S+):dbname=(\S+);host=(\S+)\|(\S+)\|(\S*)$")
+    _engine=None
 
     def __init__(self):
         self._sessions={}
@@ -72,13 +82,11 @@ class DBsession(Singleton):
     def getEngine(cls,tablename=None):
         """"""
         if not cls.isSqlite():
-            if not Base.metadata.bind:
-                engine=cls.createEngine()
-            else:
-                return Base.metadata.bind
+            if cls._engine is None:
+                cls._engine=cls.createEngine()
+            return cls._engine
         elif tablename:
-            engine=cls.createEngine(tablename)
-        return engine
+            return cls.createEngine(tablename)
 
     #bind Base.metadata to db engine
     @classmethod
