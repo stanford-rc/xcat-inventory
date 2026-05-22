@@ -10,8 +10,8 @@ function check_linux_distro()
 
 pkgname="xcat-inventory"
 
-build_dir=${DEST:-/${pkgname}_build}
-mkdir -p $build_dir
+build_dir=${DEST:-$(pwd)/${pkgname}_build}
+mkdir -p "$build_dir"
 
 XCAT_BUILD_DISTRO="$(check_linux_distro)"
 echo "[INFO] Start to build $pkgname on $XCAT_BUILD_DISTRO"
@@ -42,7 +42,7 @@ if [ $? != 0 ]; then
     exit 1
 fi
 
-buildpath=`find $dftpath -name ${pkgname}*.$pkgtype | xargs ls -t | head -n 1`
+buildpath=$(find "$dftpath" -name "${pkgname}*.${pkgtype}" | xargs -r ls -t | head -n 1)
 if [ -z "$buildpath" ]; then
     echo "[ERROR] Could not find build ${pkgname}*.$pkgtype"
     exit 1
@@ -50,7 +50,7 @@ fi
 
 filepath=$(dirname $buildpath)
 build_dir=$build_dir
-mkdir -p $build_dir
+mkdir -p "$build_dir"
 
 cp -f $buildpath $build_dir
 if [ $? != 0 ]; then
