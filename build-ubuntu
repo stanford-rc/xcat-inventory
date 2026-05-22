@@ -29,7 +29,11 @@ fi
 
 if [[ "${DISTRO_ID}" == "debian" ]]; then
     DEBIAN_MAJOR_VERSION=${DISTRO_VERSION%%.*}
-    if [[ ! "${DEBIAN_MAJOR_VERSION}" =~ ^[0-9]+$ ]] || [[ "${DEBIAN_MAJOR_VERSION}" -lt 12 ]]; then
+    if [[ ! "${DEBIAN_MAJOR_VERSION}" =~ ^[0-9]+$ ]]; then
+        echo "ERROR: Unsupported Debian version ${DISTRO_VERSION}, Debian 12+ is required"
+        exit 1
+    fi
+    if [[ "${DEBIAN_MAJOR_VERSION}" -lt 12 ]]; then
         echo "ERROR: Unsupported Debian version ${DISTRO_VERSION}, Debian 12+ is required"
         exit 1
     fi
