@@ -225,15 +225,15 @@ class XcatBase(object):
                 tabval=self._dbhash[item]
             else:
                 tabval=self.__evalschema_tab(item) 
-            myexpression=myexpression.replace('T{'+item+'}',"'"+str(tabval).replace("'","\\'")+"'")   
+            myexpression=myexpression.replace('T{'+item+'}',"'"+str(tabval).replace("\\","\\\\").replace("'","\\'")+"'")   
         tabmatched=re.findall(r'T\{(\S+)\}',myexpression)
         if tabmatched:
             for item in tabmatched:
                 if myschmpath: 
-                    myexpression=myexpression.replace('T{'+item+'}',"'"+str(item).replace("'","\\'")+"'")
+                    myexpression=myexpression.replace('T{'+item+'}',"'"+str(item).replace("\\","\\\\").replace("'","\\'")+"'")
                 else:
                     tabval=self.__evalschema_tab(item)
-                    myexpression=myexpression.replace('T{'+item+'}',"'"+str(tabval).replace("'","\\'")+"'")
+                    myexpression=myexpression.replace('T{'+item+'}',"'"+str(tabval).replace("\\","\\\\").replace("'","\\'")+"'")
         evalexp=eval("lambda "+myexpression,None,ctxdict)
         result=evalexp()
         if myschmpath:
@@ -261,7 +261,7 @@ class XcatBase(object):
                 tabval=self._dbhash[item]
             if tabval is None:
                 tabval=''
-            myexpression=myexpression.replace('T{'+item+'}',"'"+str(tabval).replace("'","\\'")+"'")
+            myexpression=myexpression.replace('T{'+item+'}',"'"+str(tabval).replace("\\","\\\\").replace("'","\\'")+"'")
         ctxdict={} 
         for item in mydepvallist:
             myval=Util_getdictval(self._mydict,item)
